@@ -8,13 +8,15 @@ function Counter() {
   countRef.current = count;
 
   useEffect(() => {
+    // count = 0
     const id = setInterval(() => {
-      if (countRef.current < 20) {
+      if (countRef.current < 5) {
         // ✅ This doesn't depend on `count` variable outside
         setCount(c => c + 1); // ✅ This doesn't depend on `count` variable outside
       } else {
         setCount(0);
       }
+      // setCount(prev => prev + 1);
     }, 1000);
     return () => clearInterval(id);
   }, []); // ✅ Our effect doesn't use any variables in the component scope
@@ -25,27 +27,18 @@ function Counter() {
 export default function App() {
   const [count, setCount] = useState(0);
   const [delay, setDelay] = useState(1000);
-  const [active, setActive] = useState(true);
 
-  useInterval(
-    () => {
-      // Your custom logic here
-      setCount(count + 1);
-    },
-    delay,
-    active
-  );
-
-  function startInterval() {
-    setActive(true);
-  }
-
-  function clearInterval() {
-    setActive(false);
-  }
+  useInterval(() => {
+    // Your custom logic here
+    setCount(count + 1);
+  }, delay);
 
   function handleDelayChange(text) {
-    setDelay(parseInt(text, 10));
+    if (text === "") {
+      setDelay(0);
+    } else {
+      setDelay(parseInt(text, 10));
+    }
   }
 
   return (
@@ -61,8 +54,8 @@ export default function App() {
           value={delay.toString()}
           onChangeText={handleDelayChange}
         />
-        <Button onPress={startInterval} title="Start" />
-        <Button onPress={clearInterval} title="Stop" />
+        {/* <Button onPress={startInterval} title="Start" />
+        <Button onPress={clearInterval} title="Stop" /> */}
       </View>
     </View>
   );
